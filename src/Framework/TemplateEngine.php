@@ -12,6 +12,21 @@ class TemplateEngine
 
     public function render(string $template, array $data = [])
     {
-        include "{$this->basePath}/{$template}";
+        extract($data, EXTR_SKIP); // This extracts all data from array into named variables based on key name
+
+        ob_start();
+
+        include $this->resolve($template);
+
+        $output = ob_get_contents();
+
+        ob_end_clean();
+
+        return $output;
+    }
+
+    public function resolve(string $path)
+    {
+        return "{$this->basePath}/{$path}";
     }
 }
